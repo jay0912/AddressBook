@@ -1,0 +1,94 @@
+﻿ @{
+    ViewData["Title"] = "City List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using System.Data;
+@model DataTable;
+
+<div class="col-md-12">
+    <div class="row">
+        <div class="col-md-10">
+            <h3 class="text-decoration-underline"><strong>City List</strong></h3>
+        </div>
+        <div class="col-md-2">
+            <a asp-area="City" asp-controller="City" asp-action="Add" class="btn btn-success btn-sm pull-right">ADD City</a>
+        </div>
+    </div>
+</div>
+
+<form class="pull-right form-inline my-2 my-lg-0" style="width : 20%;">
+    <input class="form-control mr-sm-2" id="sample_1" type="search" placeholder="Search" aria-label="Search">
+    <i class="fas fa-search text-black"></i>
+</form>
+
+<table class="table table-responsive-sm table-hover text-center mt-4" id="sample_1">
+    <thead class="table-secondary">
+        <tr>
+            <th class="py-4">City ID</th>
+            <th class="py-4">City</th>
+            <th class="py-4">City Code</th>
+            @*<th class="py-4">PhotoPath</th>*@
+            <th class="py-4">State</th>
+            <th class="py-4">Country</th>
+            <th class="py-4">Creation Date</th>
+            <th class="py-4">Modifiction Date</th>
+            <th class="py-4">Action</th>
+            <th class="py-4">Edit</th>
+        </tr>
+
+    </thead>
+    <tbody id="sample_2">
+        @foreach (DataRow dr in Model.Rows)
+        {
+            <tr>
+                <td>@dr["CityID"]</td>
+                <td>@dr["CityName"]</td>
+                <td>@dr["CityCode"]</td>
+                @*<td>@dr["PhotoPath"]</td>*@
+                <td>@dr["StateName"]</td>
+                <td>@dr["CountryName"]</td>
+                <td>@Convert.ToDateTime(dr["CreationDate"]).ToString("dd-MM-yyyy")</td>
+                <td>@Convert.ToDateTime(dr["ModificationDate"]).ToString("dd-MM-yyyy")</td>
+                <td>
+                    <form method=" post" asp-area="City" asp-controller="City" asp-action="Delete">
+                        <input type="hidden" name="CityID" value=" @Convert.ToInt32(dr["CityID"].ToString()) " />
+                        <button type="submit" class=" btn btn-danger" onclick="return fun1()">DELETE</button>
+                    </form>
+                </td>
+                <td>
+                    <a asp-area="City" asp-controller="City" asp-action="Add" class="btn btn-primary" asp-route-CityID="@Convert.ToInt32(dr["CityID"].ToString())">Update</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts{
+    <script>
+
+            $(document).ready(function () {
+                $("#sample_1").on("keyup", function () {
+                    var value = $(this).val().toLowerCase();
+                    $("#sample_2 tr").filter(function () {
+                        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                    });
+                });
+            });
+
+        $('#sample_2').DataTable({
+            "language": {
+                "emptyTable": "My Custom Message On Empty Table"
+            }
+        });
+
+        function fun1() {
+            if (confirm("Are You Sure You Want To Delete?")) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+    </script>
+}

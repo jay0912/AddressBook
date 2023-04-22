@@ -1,0 +1,186 @@
+﻿@using AddressBook_Multi.Areas.Contact.Models
+@{
+    ViewData["Title"] = "Contact Add/Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@model ContactModel
+
+
+    <div class="mask d-flex align-items-center h-200 gradient-custom-3">
+        <div class="container h-200">
+            <div class="row d-flex justify-content-center align-items-center h-200">
+                <div class="col-12 col-md-9 col-lg-7 col-xl-6">
+                    <div class="card" style="border-radius: 15px;">
+                        <div class="card-body p-5">
+                            <h2 class="text-uppercase text-center mb-5">ADD DATA</h2>
+                            <h5 class="text-uppercase text-center mb-5" style="background: linear-gradient(to bottom, #ff99ff 0%, #9966ff 100%)">@TempData["Msg"]</h5>
+
+                            <form method="post" asp-area="Contact" asp-controller="Contact" asp-action="Save" enctype="multipart/form-data">
+                                @Html.HiddenFor(x=>x.ContactID)
+                                @Html.HiddenFor(x=>x.PhotoPath)
+                                <div class="form-outline mb-4">
+                                    <label class="form-label" for="form3Example1cg"><span class="text-danger">*</span><strong>Name</strong></label>
+                                    <input type="text" asp-for="Name" id="form3Example1cg" class="form-control form-control-lg" />
+                                    <span asp-validation-for="Name" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-outline mb-4">
+                                    <label class="form-label" for="form3Example1cg"><span class="text-danger">*</span><strong>Mobile</strong></label>
+                                    <input type="text" asp-for="Mobile" id="form3Example1cg" class="form-control form-control-lg" />
+                                    <span asp-validation-for="Mobile" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-outline mb-4">
+                                    <label class="form-label" for="form3Example1cg"><span class="text-danger">*</span><strong>Address</strong></label>
+                                    <input type="text" asp-for="Address" id="form3Example1cg" class="form-control form-control-lg" />
+                                    <span asp-validation-for="Address" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-outline mb-4">
+                                    <label class="form-label" for="form3Example1cg"><span class="text-danger">*</span><strong>Email</strong></label>
+                                    <input type="text" asp-for="Email" id="form3Example1cg" class="form-control form-control-lg" />
+                                    <span asp-validation-for="Email" class="text-danger"></span>
+                                </div>
+
+                                <div class="form-outline mb-4">
+                                    <label class="form-label" for="form3Example3cg"><strong>Photo Path</strong></label>
+                                    <input type="file" asp-for="File" class="form-control form-control-lg" />
+                                </div>
+
+                                <div class="form-outline mb-4">
+                                    <label class="form-label" for="form3Example3cg"><span class="text-danger">*</span><strong>Country</strong></label>
+                                    <select asp-for="CountryID" asp-items="@(new SelectList(ViewBag.CountryList, "CountryID", "CountryName"))" class="form-control form-control-lg" onchange="fnonStateChange();">
+                                        <option>Select Country</option>
+                                    </select>
+                                    <span asp-validation-for="CountryID" class="text-danger"></span>
+                                </div>
+
+
+
+                                <div class="form-outline mb-4">
+                                    <label class="form-label" for="form3Example3cg"><span class="text-danger">*</span><strong>State</strong></label>
+                                    <select asp-for="StateID" asp-items="@(new SelectList(ViewBag.StateList, "StateID", "StateName"))" class="form-control form-control-lg" onchange="fnonCityChange();">
+                                        <option>Select State</option>
+                                    </select>
+                                    <span asp-validation-for="StateID" class="text-danger"></span>
+                                </div>
+
+
+
+                                <div class="form-outline mb-4">
+                                    <label class="form-label" for="form3Example3cg"><span class="text-danger">*</span><strong>City</strong></label>
+                                    <select asp-for="CityID" asp-items="@(new SelectList(ViewBag.CityList, "CityID", "CityName"))" class="form-control form-control-lg">
+                                        <option>Select City</option>
+                                    </select>
+                                    <span asp-validation-for="CityID" class="text-danger"></span>
+                                </div>
+
+
+
+                                <div class="form-outline mb-4">
+                                    <label class="form-label" for="form3Example3cg"><span class="text-danger">*</span><strong>Contact Category</strong></label>
+                                    <select asp-for="CategoryID" asp-items="@(new SelectList(ViewBag.ContactCategoryList, "CategoryID", "CategoryName"))" class="form-control form-control-lg">
+                                        <option>Select Category</option>
+                                    </select>
+                                    <span asp-validation-for="CategoryID" class="text-danger"></span>
+                                </div>
+
+
+                               @* <div class="form-outline mb-4">
+                                    <label class="form-label" for="form3Example4cg"><strong>Creation Date</strong></label>
+                                    <input type="date" asp-for="CreationDate" id="form3Example4cg" class="form-control form-control-lg" />
+                                </div>
+
+                                <div class="form-outline mb-4">
+                                    <label class="form-label" for="form3Example4cg"><strong>Modification Date</strong></label>
+                                    <input type="date" asp-for="ModificationDate" id="form3Example4cg" class="form-control form-control-lg" />
+                                </div>*@
+
+                                <div class="d-flex ">
+                                    <div>
+                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                    </div>
+                                    <div class="mx-3">
+                                    <a asp-area="Contact" asp-controller="Contact" asp-action="Index" class="btn btn-danger">Cancel</a>
+                                    </div>
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+@section Scripts{
+    <script>
+        function fnonStateChange() {
+            var CountryID = $("#CountryID").val();
+
+            if (CountryID !== "") {
+                $("#StateID").empty();
+                $("#StateID").append($("<option></option>").val("").html("Select State"));
+                $("#CityID").empty();
+                $("#CityID").append($("<option></option>").val("").html("Select City"));
+                $.ajax(
+                    {
+                        type: "POST",
+                        contentType: "application/json; charset=utf-8",
+                        url: "@Url.Action("DropDownByCountry", "City")" + "?CountryID=" + CountryID,
+                        date: {},
+                        dataType: "json",
+                        success: function (Result) {
+
+                            $.each(Result,
+                                function (key, value) {
+                                    $("#StateID").append($("<option></option>").val(value.stateID).html(value.stateName));
+                                });
+                        },
+                        error: function (r) {
+                            alert("Error while loading DropDwon.");
+                        }
+                    });
+            }
+            else {
+                $("#StateID").empty();
+                $("#StateID").append($("<option></option>").val("").html("Select State"));
+                $("#CityID").empty();
+                $("#CityID").append($("<option></option>").val("").html("Select City"));
+            }
+        }
+
+        function fnonCityChange() {
+            var StateID = $("#StateID").val();
+
+            if (StateID !== "") {
+                $("#CityID").empty();
+                $("#CityID").append($("<option></option>").val("").html("Select City"));
+                $.ajax(
+                    {
+                        type: "POST",
+                        contentType: "application/json; charset=utf-8",
+                        url: "@Url.Action("DropDownByState", "Contact")" + "?StateID=" + StateID,
+                        date: {},
+                        dataType: "json",
+                        success: function (Result) {
+
+                            $.each(Result,
+                                function (key, value) {
+                                    $("#CityID").append($("<option></option>").val(value.cityID).html(value.cityName));
+                                });
+                        },
+                        error: function (r) {
+                            alert("Error while loading DropDwon.");
+                        }
+                    });
+            }
+            else {
+                $("#CityID").empty();
+                $("#CityID").append($("<option></option>").val("").html("Select City"));
+            }
+        }
+    </script>
+}

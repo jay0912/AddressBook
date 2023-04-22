@@ -1,0 +1,91 @@
+﻿@{
+    ViewData["Title"] = "ContactCategory List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using System.Data;
+@model DataTable;
+
+<div class="col-md-12">
+    <div class="row">
+        <div class="col-md-10">
+            <h3 class="text-decoration-underline"><strong>ContactCategory List</strong></h3>
+        </div>
+        <div class="col-md-2">
+            <a asp-area="ContactCategory" asp-controller="ContactCategory" asp-action="Add" class="btn btn-success btn-sm pull-right">ADD ContactCategory</a>
+        </div>
+    </div>
+</div>
+
+@*<form class="pull-right form-inline my-2 my-lg-0" style="width : 20%;">
+    <input class="form-control mr-sm-2" id="sample_1" type="search" placeholder="Search" aria-label="Search">
+    <i class="fas fa-search text-black"></i>
+</form>*@
+
+<form class="ms-auto pull-right  form-inline my-2 my-lg-0" style="width : 20%;">
+    <input class="form-control mr-sm-2" id="sample_1" type="search" placeholder="Search" aria-label="Search">
+    <i class="fas fa-search text-black"></i>
+</form>
+
+
+<table class="table table-responsive-sm table-hover text-center mt-4" id="sample_1">
+    <thead class="table-secondary">
+        <tr>
+            <th class="py-4">Category ID</th>
+            @*<th class="py-4">Contact</th>*@
+            <th class="py-4">Category Name</th>
+           @* <th class="py-4">PhotoPath</th>*@
+            <th class="py-4">Creation Date</th>
+            <th class="py-4">Modifiction Date</th>
+            <th class="py-4">Action</th>
+            <th class="py-4">Edit</th>
+        </tr>
+
+    </thead>
+    <tbody id="sample_2">
+        @foreach (DataRow dr in Model.Rows)
+        {
+            <tr>
+                <td>@dr["CategoryID"]</td>
+                @*<td>@dr["Name"]</td>*@
+                <td>@dr["CategoryName"]</td>
+               @* <td>@dr["PhotoPath"]</td>*@
+                <td>@Convert.ToDateTime(dr["CreationDate"]).ToString("dd-MM-yyyy")</td>
+                <td>@Convert.ToDateTime(dr["ModificationDate"]).ToString("dd-MM-yyyy")</td>
+                <td>
+                    <form method="post" asp-area="ContactCategory" asp-controller="ContactCategory" asp-action="Delete">
+                        <input type="hidden" name="CategoryID" value=" @Convert.ToInt32(dr["CategoryID"].ToString()) " />
+                        <button type="submit" class=" btn btn-danger" onclick="return fun1()">DELETE</button>
+                    </form>
+                </td>
+                <td>
+                    <a asp-area="ContactCategory" asp-controller="ContactCategory" asp-action="Add" class="btn btn-primary" asp-route-CategoryID="@Convert.ToInt32(dr["CategoryID"].ToString())">Update</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+@section Scripts{
+    <script>
+
+        $(document).ready(function () {
+            $("#sample_1").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("#sample_2 tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+
+        function fun1() {
+            if (confirm("Are You Sure You Want To Delete?")) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+    </script>
+}

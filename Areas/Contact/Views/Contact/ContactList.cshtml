@@ -1,0 +1,122 @@
+﻿@{
+    ViewData["Title"] = "Contact List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using System.Data;
+@model DataTable;
+
+<div class="col-md-12">
+    <div class="row">
+        <div class="col-md-10">
+            <h3 class="text-decoration-underline"><strong>Contact List</strong></h3>
+        </div>
+        <div class="col-md-2">
+            <a asp-area="Contact" asp-controller="Contact" asp-action="Add" class="btn btn-success btn-sm pull-right">ADD Contact</a>
+        </div>
+    </div>
+</div>
+
+<hr />
+
+<h3>Filter</h3>
+<form method="post" asp-area="Contact" asp-controller="Contact" asp-action="Filter" align="center">
+    <div class="row">
+        <div class="col-md-3">
+            <input type="search" name="CountryName" class="form-control" placeholder="Country Name">
+        </div>
+        <div class="col-md-3">
+            <input type="search" name="StateName" class="form-control" placeholder="State Name">
+        </div>
+        <div class="col-md-3">
+            <input type="search" name="CityName" class="form-control" placeholder="City Name">
+        </div>
+        <div class="col-md-3 d-inline" id="sample_1_filter">
+            <button type="submit" class="btn btn-primary">Search</button>
+            <a class="btn btn-primary" asp-controller="Contact" asp-action="index">Clear Filter</a>
+        </div>
+    </div>
+</form>
+
+<hr />
+
+
+<form class="pull-right form-inline my-2 my-lg-0" style="width : 20%;">
+    <input class="form-control mr-sm-2" id="sample_1" type="search" placeholder="Search" aria-label="Search">
+    <i class="fas fa-search text-black"></i>
+</form>
+
+
+
+<table class="table table-responsive-sm table-hover text-center mt-4" id="sample_1">
+    <thead class="table-secondary">
+        <tr>
+            <th class="py-4">Contact ID</th>
+            <th class="py-4">Name</th>
+            <th class="py-4">Mobile</th>
+            <th class="py-4">Address</th>
+            <th class="py-4">Email</th>
+            <th class="py-4">PhotoPath</th>
+            <th class="py-4">Country</th>
+            <th class="py-4">State</th>
+            <th class="py-4">City</th>
+            <th class="py-4">Category</th>
+            <th class="py-4">Creation</th>
+            <th class="py-4">Modifiction</th>
+            <th class="py-4">Action</th>
+            <th class="py-4">Edit</th>
+        </tr>
+
+    </thead>
+    <tbody id="sample_2">
+        @foreach (DataRow dr in Model.Rows)
+        {
+            <tr>
+                <td>@dr["ContactID"]</td>
+                <td>@dr["Name"]</td>
+                <td>@dr["Mobile"]</td>
+                <td>@dr["Address"]</td>
+                <td>@dr["Email"]</td>
+                <td><img src="@Url.Content(dr["PhotoPath"].ToString())" class="img img-responsive" /></td>
+                <td>@dr["CountryName"]</td>
+                <td>@dr["StateName"]</td>
+                <td>@dr["CityName"]</td>
+                <td>@dr["CategoryName"]</td>
+                <td>@Convert.ToDateTime(dr["CreationDate"]).ToString("dd-MM-yyyy")</td>
+                <td>@Convert.ToDateTime(dr["ModificationDate"]).ToString("dd-MM-yyyy")</td>
+                <td>
+                    <form method="post" asp-area="Contact" asp-controller="Contact" asp-action="Delete">
+                        <input type="hidden" name="ContactID" value=" @Convert.ToInt32(dr["ContactID"].ToString()) " />
+                        <button type="submit" class=" btn btn-danger" onclick="return fun1()">DELETE</button>
+                    </form>
+                </td>
+                <td>
+                    <a asp-area="Contact" asp-controller="Contact" asp-action="Add" class="btn btn-primary" asp-route-ContactID="@Convert.ToInt32(dr["ContactID"].ToString())">Update</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts{
+    <script>
+
+        $(document).ready(function () {
+            $("#sample_1").on("keyup", function () {
+                var value = $(this).val().toLowerCase();
+                $("#sample_2 tr").filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+
+        function fun1() {
+            if (confirm("Are You Sure You Want To Delete?")) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+    </script>
+}
